@@ -122,9 +122,26 @@ def parse(tokens):
 def reduce(func, operands, initial):
     
     totaled_value = 0
+    times_ran = 0
+    
+    if func == mul:
+        totaled_value = 1
     
     while operands is not nil:
-        totaled_value += func(initial, operands.first)
+        
+        if func == add:
+            totaled_value += func(initial, operands.first)
+        elif func == mul:
+            totaled_value *= func(initial, operands.first)
+        elif func == truediv:
+            totaled_value += func(initial, operands.first)
+        elif func == sub:
+            # print(f"{totaled_value} += ({initial} - {operands.first})")
+            if times_ran == 0:
+                totaled_value += func(initial, operands.first)
+            if times_ran > 0:
+                totaled_value = func(totaled_value, operands.first)
+            times_ran += 1
         operands = operands.rest
         
     return totaled_value
